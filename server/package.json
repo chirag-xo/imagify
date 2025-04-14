@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "main": "server/server.js",
   "type": "module",
-"scripts": {
-  "start": "node server.js",
-  "dev": "nodemon server.js",
-  "build": "npm install && npm run build"
-},
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "nodemon server/server.js",
+    "build": "echo 'No build step for server'"
+  },
   "author": "",
   "license": "ISC",
   "description": "",
