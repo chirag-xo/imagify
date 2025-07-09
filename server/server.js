@@ -1,19 +1,16 @@
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const connectDB = require("./config/db");
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import connectDB from "./config/db.js";
+import userRoutes from "./routes/userRoutes.js";
+import imageRoutes from "./routes/imageRoutes.js";
 
-// Load environment variables
 dotenv.config();
-
-// Connect to database
 connectDB();
 
 const app = express();
 
-// ✅ CORS middleware setup
 const allowedOrigin = "https://imagify-neon.vercel.app";
-
 app.use(cors({
   origin: allowedOrigin,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -21,7 +18,6 @@ app.use(cors({
   credentials: true
 }));
 
-// ✅ Manual header fallback (just in case)
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", allowedOrigin);
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -29,17 +25,12 @@ app.use((req, res, next) => {
   next();
 });
 
-// ✅ Handle preflight
 app.options("*", cors());
-
-// Parse JSON
 app.use(express.json());
 
-// Routes
-app.use("/api/user", require("./routes/userRoutes"));
-app.use("/api/images", require("./routes/imageRoutes"));
+app.use("/api/user", userRoutes);
+app.use("/api/images", imageRoutes);
 
-// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
