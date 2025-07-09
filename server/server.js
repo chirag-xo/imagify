@@ -11,17 +11,28 @@ connectDB();
 
 const app = express();
 
-// CORS configuration
-const allowedOrigins = ['https://imagify-neon.vercel.app'];
+// ✅ CORS middleware setup
+const allowedOrigin = "https://imagify-neon.vercel.app";
+
 app.use(cors({
-  origin: allowedOrigins,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: allowedOrigin,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
 
-// Handle preflight (OPTIONS) requests
+// ✅ Manual header fallback (just in case)
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", allowedOrigin);
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
+
+// ✅ Handle preflight
 app.options("*", cors());
 
+// Parse JSON
 app.use(express.json());
 
 // Routes
@@ -31,5 +42,5 @@ app.use("/api/images", require("./routes/imageRoutes"));
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(` Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
